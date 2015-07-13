@@ -551,7 +551,7 @@ main (int argc, char **argv)
   locals[2] = (nvpair){"LOCAL:mode_alloc", "size_t", &mode_alloc, sizeof(size_t)};
   locals[3] = (nvpair){"LOCAL:ok", "bool", &ok, sizeof(bool)};
   locals[4] = (nvpair){"LOCAL:preserve_root", "bool", &preserve_root, sizeof(bool)};
-  locals[5] = (nvpair){"LOCAL:reference_file", "char*", reference_file, sizeof(const char*)};
+  locals[5] = (nvpair){"LOCAL:reference_file", "char*", reference_file, sizeof(char*)};
   locals[6] = (nvpair){"LOCAL:c", "int", &c, sizeof(int)};
 
 
