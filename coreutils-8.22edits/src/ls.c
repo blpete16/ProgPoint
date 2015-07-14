@@ -1132,10 +1132,10 @@ void writeState(nvpair* localpairs, int localpaircount, char* statename){
   nv = (nvpair){"GLOBAL:required_mon_width", "size_t", &required_mon_width, sizeof(size_t)};
   writeValue(nv, statefile);
 
-  nv = (nvpair){"GLOBAL:dev_ino_obstack", "struct obstack", dev_ino_obstack, sizeof(struct obstack)};
+  nv = (nvpair){"GLOBAL:dev_ino_obstack", "struct obstack", &dev_ino_obstack, sizeof(struct obstack)};
   writeValue(nv, statefile);
 
-  nv = (nvpair){"GLOBAL:subdired_obstack", "struct obstack", subdired_obstack, sizeof(struct obstack)};
+  nv = (nvpair){"GLOBAL:subdired_obstack", "struct obstack", &subdired_obstack, sizeof(struct obstack)};
   writeValue(nv, statefile);
 
   nv = (nvpair){"GLOBAL:active_dir_set", "Hash_table *", active_dir_set, sizeof(Hash_table*)};
@@ -1255,8 +1255,8 @@ void writeState(nvpair* localpairs, int localpaircount, char* statename){
   nv = (nvpair){"GLOBAL:used_color", "bool", &used_color, sizeof(bool)};
   writeValue(nv, statefile);
 
-  nv = (nvpair){"GLOBAL:color_ext_list", "color_ext_type *", color_ext_list, sizeof(color_ext_type)};
-  writeValue(nv, statefile);
+  //nv = (nvpair){"GLOBAL:color_ext_list", "color_ext_type *", color_ext_list, sizeof(color_ext_type)};
+  //writeValue(nv, statefile);
 
   nv = (nvpair){"GLOBAL:color_buf", "char *", color_buf, sizeof(char)};
   writeValue(nv, statefile);
@@ -1282,20 +1282,20 @@ void writeState(nvpair* localpairs, int localpaircount, char* statename){
   nv = (nvpair){"GLOBAL:ignore_mode", "enum", &ignore_mode, sizeof(int)};
   writeValue(nv, statefile);
 
-  nv = (nvpair){"GLOBAL:ignore_patterns", "ignore_pattern *", ignore_patterns, sizeof(ignore_pattern)};
-  writeValue(nv, statefile);
+  //nv = (nvpair){"GLOBAL:ignore_patterns", "ignore_pattern *", ignore_patterns, sizeof(ignore_pattern)};
+  //writeValue(nv, statefile);
 
-  nv = (nvpair){"GLOBAL:hide_patterns", "ignore_pattern *", hide_patterns, sizeof(ignore_pattern)};
-  writeValue(nv, statefile);
+  //nv = (nvpair){"GLOBAL:hide_patterns", "ignore_pattern *", hide_patterns, sizeof(ignore_pattern)};
+  //writeValue(nv, statefile);
 
   nv = (nvpair){"GLOBAL:qmark_funny_chars", "bool", &qmark_funny_chars, sizeof(bool)};
   writeValue(nv, statefile);
 
-  nv = (nvpair){"GLOBAL:filename_quoting_options", "quoting_options *", filename_quoting_options, sizeof(quoting_options)};
-  writeValue(nv, statefile);
+  //nv = (nvpair){"GLOBAL:filename_quoting_options", "quoting_options *", filename_quoting_options, sizeof(quoting_options)};
+  //writeValue(nv, statefile);
   
-  nv = (nvpair){"GLOBAL:dirname_quoting_options", "quoting_options", dirname_quoting_options, sizeof(quoting_options)};
-  writeValue(nv, statefile);
+  //nv = (nvpair){"GLOBAL:dirname_quoting_options", "quoting_options", dirname_quoting_options, sizeof(quoting_options)};
+  //writeValue(nv, statefile);
 
   nv = (nvpair){"GLOBAL:tabsize", "size_t", &tabsize, sizeof(size_t)};
   writeValue(nv, statefile);
@@ -1315,10 +1315,10 @@ void writeState(nvpair* localpairs, int localpaircount, char* statename){
   nv = (nvpair){"GLOBAL:caught_signals", "sigset_t", &caught_signals, sizeof(sigset_t)};
   writeValue(nv, statefile);
 
-  nv = (nvpair){"GLOBAL:interrupt_signal", "sig_atomic_t", &interrupt_signal, sizeof(sig_atomic_t)};
+  nv = (nvpair){"GLOBAL:interrupt_signal", "sig_atomic_t", &interrupt_signal, sizeof( sig_atomic_t)};
   writeValue(nv, statefile);
 
-  nv = (nvpair){"GLOBAL:stop_signal_count", "sig_atomic_t", &stop_signal_count, sizeof(sig_atomic_t)};
+  nv = (nvpair){"GLOBAL:stop_signal_count", "sig_atomic_t", &stop_signal_count, sizeof( sig_atomic_t)};
   writeValue(nv, statefile);
 
   nv = (nvpair){"GLOBAL:exit_status", "int", &exit_status, sizeof(int)};
@@ -1381,7 +1381,7 @@ abmon_init (void)
 
           if (req == (size_t) -1 || req >= sizeof (abmon[i]))
             {
-              required_mon_width = 0;  ignore precomputed strings.  */
+              required_mon_width = 0;  /*ignore precomputed strings.  */
               return required_mon_width;
             }
 
@@ -1749,10 +1749,10 @@ main (int argc, char **argv)
     }
   else
     do
-
+      {
   writeState(locals, 3, "mainwhileloop1");
       gobble_file (argv[i++], unknown, NOT_AN_INODE_NUMBER, true, "");
-    while (i < argc);
+      } while (i < argc);
 
   if (cwd_n_used)
     {

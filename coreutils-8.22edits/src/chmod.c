@@ -544,32 +544,32 @@ main (int argc, char **argv)
 
   openStateFile();
 
-  nvpair* locals = malloc(sizeof(nvpair)*7);
+  nvpair* locals = malloc(sizeof(nvpair)*6);
 
   locals[0] = (nvpair){"LOCAL:mode", "char*", mode, sizeof(char*)};
   locals[1] = (nvpair){"LOCAL:mode_len", "size_t", &mode_len, sizeof(size_t)};
   locals[2] = (nvpair){"LOCAL:mode_alloc", "size_t", &mode_alloc, sizeof(size_t)};
   locals[3] = (nvpair){"LOCAL:ok", "bool", &ok, sizeof(bool)};
   locals[4] = (nvpair){"LOCAL:preserve_root", "bool", &preserve_root, sizeof(bool)};
-  locals[5] = (nvpair){"LOCAL:reference_file", "char*", reference_file, sizeof(char*)};
-  locals[6] = (nvpair){"LOCAL:c", "int", &c, sizeof(int)};
+
+  locals[5] = (nvpair){"LOCAL:c", "int", &c, sizeof(int)};
 
 
-  writeState(locals, 7, "main1");
+  writeState(locals, 6, "main1");
   initialize_main (&argc, &argv);
-  writeState(locals, 7, "main2");
+  writeState(locals, 6, "main2");
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  writeState(locals, 7, "main3");
+  writeState(locals, 6, "main3");
 
   atexit (close_stdout);
 
   recurse = force_silent = diagnose_surprises = false;
 
-  writeState(locals, 8, "main1");
+  writeState(locals, 6, "main1");
   while ((c = getopt_long (argc, argv,
                            ("Rcfvr::w::x::X::s::t::u::g::o::a::,::+::=::"
                             "0::1::2::3::4::5::6::7::"),
@@ -577,7 +577,7 @@ main (int argc, char **argv)
          != -1)
     {
 
-  writeState(locals, 7, "mainloop");
+  writeState(locals, 6, "mainloop");
       switch (c)
         {
         case 'r':
