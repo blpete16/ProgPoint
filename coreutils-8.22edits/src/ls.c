@@ -1110,7 +1110,7 @@ void finishState(){
 void writeState(nvpair* localpairs, int localpaircount, char* statename){
   nvpair nv;
   
-  int paircount = 40 + localpaircount;
+  int paircount = 69 + localpaircount;
 
   int namelen = strlen(statename);
 
@@ -1243,7 +1243,97 @@ void writeState(nvpair* localpairs, int localpaircount, char* statename){
   nv = (nvpair){"GLOBAL:file_output_block_size", "uintmax_t", &file_output_block_size, sizeof(uintmax_t)};
   writeValue(nv, statefile);
 
-  //START WITH DIRED.
+  nv = (nvpair){"GLOBAL:dired", "bool", &dired, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:indicator_style", "enum indicator_style", &indicator_style, sizeof(enum indicator_style)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:print_with_color", "bool", &print_with_color, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:used_color", "bool", &used_color, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:color_ext_list", "color_ext_type *", color_ext_list, sizeof(color_ext_type)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:color_buf", "char *", color_buf, sizeof(char)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:check_symlink_color", "bool", &check_symlink_color, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:print_inode", "bool", &print_inode, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:dereference", "enum Dereference_symlink", &dereference, sizeof(enum Dereference_symlink)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:recursive", "bool", &recursive, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:immediate_dirs", "bool", &immediate_dirs, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:directories_first", "bool", &directories_first, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:ignore_mode", "enum", &ignore_mode, sizeof(int)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:ignore_patterns", "ignore_pattern *", ignore_patterns, sizeof(ignore_pattern)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:hide_patterns", "ignore_pattern *", hide_patterns, sizeof(ignore_pattern)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:qmark_funny_chars", "bool", &qmark_funny_chars, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:filename_quoting_options", "quoting_options *", filename_quoting_options, sizeof(quoting_options)};
+  writeValue(nv, statefile);
+  
+  nv = (nvpair){"GLOBAL:dirname_quoting_options", "quoting_options", dirname_quoting_options, sizeof(quoting_options)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:tabsize", "size_t", &tabsize, sizeof(size_t)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:print_dir_name", "bool", &print_dir_name, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:line_length", "size_t", &line_length, sizeof(size_t)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:format_needs_stat", "bool", &format_needs_stat, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:format_needs_type", "bool", &format_needs_type, sizeof(bool)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:caught_signals", "sigset_t", &caught_signals, sizeof(sigset_t)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:interrupt_signal", "sig_atomic_t", &interrupt_signal, sizeof(sig_atomic_t)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:stop_signal_count", "sig_atomic_t", &stop_signal_count, sizeof(sig_atomic_t)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:exit_status", "int", &exit_status, sizeof(int)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:column_info", "struct column_info *", column_info, sizeof(column_info)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:max_idx", "size_t", &max_idx, sizeof(size_t)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:dired_pos", "size_t", &dired_pos, sizeof(size_t)};
+  writeValue(nv, statefile);
+
+  
   /*
  if(args != NULL){
 nv = (nvpair){"GLOBAL:**args", "char**", args, sizeof(char*)};
@@ -1256,530 +1346,7 @@ writeValue(nv, statefile);
      writeValue(nv, statefile);
    }
   nv = (nvpair){"GLOBAL:to_stdout", "int", &to_stdout, sizeof(int)};
-  writeValue(nv, statefile); 
- 
-static bool dired;
-
- 'none' means don't mention the type of files.
-   'slash' means mention directories only, with a '/'.
-   'file_type' means mention file types.
-   'classify' means mention file types and mark executables.
-
-   Controlled by -F, -p, and --indicator-style.  
-
-enum indicator_style
-  {
-    none,	     --indicator-style=none 
-    slash,	 -p, --indicator-style=slash 
-    file_type,	     --indicator-style=file-type 
-    classify	 -F, --indicator-style=classify 
-  };
-
-static enum indicator_style indicator_style;
-
- Names of indicator styles.  
-static char const *const indicator_style_args[] =
-{
-  "none", "slash", "file-type", "classify", NULL
-};
-static enum indicator_style const indicator_style_types[] =
-{
-  none, slash, file_type, classify
-};
-ARGMATCH_VERIFY (indicator_style_args, indicator_style_types);
-
- True means use colors to mark types.  Also define the different
-   colors as well as the stuff for the LS_COLORS environment variable.
-   The LS_COLORS variable is now in a termcap-like format.  
-
-static bool print_with_color;
-
- Whether we used any colors in the output so far.  If so, we will
-   need to restore the default color later.  If not, we will need to
-   call prep_non_filename_text before using color for the first time. 
-
-static bool used_color = false;
-
-enum color_type
-  {
-    color_never,		 0: default or --color=never 
-    color_always,		 1: --color=always 
-    color_if_tty		 2: --color=tty 
-  };
-
-enum Dereference_symlink
-  {
-    DEREF_UNDEFINED = 1,
-    DEREF_NEVER,
-    DEREF_COMMAND_LINE_ARGUMENTS,	 -H 
-    DEREF_COMMAND_LINE_SYMLINK_TO_DIR,	 the default, in certain cases 
-    DEREF_ALWAYS			 -L 
-  };
-
-enum indicator_no
-  {
-    C_LEFT, C_RIGHT, C_END, C_RESET, C_NORM, C_FILE, C_DIR, C_LINK,
-    C_FIFO, C_SOCK,
-    C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR, C_SETUID, C_SETGID,
-    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP, C_MULTIHARDLINK,
-    C_CLR_TO_EOL
-  };
-
-static const char *const indicator_name[]=
-  {
-    "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
-    "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
-    "ow", "tw", "ca", "mh", "cl", NULL
-  };
-
-struct color_ext_type
-  {
-    struct bin_str ext;		 The extension we're looking for 
-    struct bin_str seq;		 The sequence to output when we do 
-    struct color_ext_type *next;	 Next in list 
-  };
-
-static struct bin_str color_indicator[] =
-  {
-    { LEN_STR_PAIR ("\033[") },		 lc: Left of color sequence 
-    { LEN_STR_PAIR ("m") },		 rc: Right of color sequence 
-    { 0, NULL },			 ec: End color (replaces lc+no+rc) 
-    { LEN_STR_PAIR ("0") },		 rs: Reset to ordinary colors 
-    { 0, NULL },			 no: Normal 
-    { 0, NULL },			 fi: File: default 
-    { LEN_STR_PAIR ("01;34") },		 di: Directory: bright blue 
-    { LEN_STR_PAIR ("01;36") },		 ln: Symlink: bright cyan 
-    { LEN_STR_PAIR ("33") },		 pi: Pipe: yellow/brown 
-    { LEN_STR_PAIR ("01;35") },		 so: Socket: bright magenta 
-    { LEN_STR_PAIR ("01;33") },		 bd: Block device: bright yellow 
-    { LEN_STR_PAIR ("01;33") },		 cd: Char device: bright yellow 
-    { 0, NULL },			 mi: Missing file: undefined 
-    { 0, NULL },			 or: Orphaned symlink: undefined 
-    { LEN_STR_PAIR ("01;32") },		 ex: Executable: bright green 
-    { LEN_STR_PAIR ("01;35") },		 do: Door: bright magenta 
-    { LEN_STR_PAIR ("37;41") },		 su: setuid: white on red 
-    { LEN_STR_PAIR ("30;43") },		 sg: setgid: black on yellow 
-    { LEN_STR_PAIR ("37;44") },		 st: sticky: black on blue 
-    { LEN_STR_PAIR ("34;42") },		 ow: other-writable: blue on green 
-    { LEN_STR_PAIR ("30;42") },		 tw: ow w/ sticky: black on green 
-    { LEN_STR_PAIR ("30;41") },		 ca: black on red 
-    { 0, NULL },			 mh: disabled by default 
-    { LEN_STR_PAIR ("\033[K") },	 cl: clear to end of line 
-  };
-
- FIXME: comment  
-static struct color_ext_type *color_ext_list = NULL;
-
- Buffer for color sequences 
-static char *color_buf;
-
- True means to check for orphaned symbolic link, for displaying
-   colors.  
-
-static bool check_symlink_color;
-
- True means mention the inode number of each file.  -i  
-
-static bool print_inode;
-
- What to do with symbolic links.  Affected by -d, -F, -H, -l (and
-   other options that imply -l), and -L.  
-
-static enum Dereference_symlink dereference;
-
- True means when a directory is found, display info on its
-   contents.  -R  
-
-static bool recursive;
-
- True means when an argument is a directory name, display info
-   on it itself.  -d  
-
-static bool immediate_dirs;
-
- True means that directories are grouped before files. 
-
-static bool directories_first;
-
- Which files to ignore.  
-
-static enum
-{
-   Ignore files whose names start with '.', and files specified by
-     --hide and --ignore.  
-  IGNORE_DEFAULT,
-
-   Ignore '.', '..', and files specified by --ignore.  
-  IGNORE_DOT_AND_DOTDOT,
-
-   Ignore only files specified by --ignore.  
-  IGNORE_MINIMAL
-} ignore_mode;
-
- A linked list of shell-style globbing patterns.  If a non-argument
-   file name matches any of these patterns, it is ignored.
-   Controlled by -I.  Multiple -I options accumulate.
-   The -B option adds '*~' and '.*~' to this list.  
-
-struct ignore_pattern
-  {
-    const char *pattern;
-    struct ignore_pattern *next;
-  };
-
-static struct ignore_pattern *ignore_patterns;
-
- Similar to IGNORE_PATTERNS, except that -a or -A causes this
-   variable itself to be ignored.  
-static struct ignore_pattern *hide_patterns;
-
- True means output nongraphic chars in file names as '?'.
-   (-q, --hide-control-chars)
-   qmark_funny_chars and the quoting style (-Q, --quoting-style=WORD) are
-   independent.  The algorithm is: first, obey the quoting style to get a
-   string representing the file name;  then, if qmark_funny_chars is set,
-   replace all nonprintable chars in that string with '?'.  It's necessary
-   to replace nonprintable chars even in quoted strings, because we don't
-   want to mess up the terminal if control chars get sent to it, and some
-   quoting methods pass through control chars as-is.  
-static bool qmark_funny_chars;
-
- Quoting options for file and dir name output.  
-
-static struct quoting_options *filename_quoting_options;
-static struct quoting_options *dirname_quoting_options;
-
- The number of chars per hardware tab stop.  Setting this to zero
-   inhibits the use of TAB characters for separating columns.  -T 
-static size_t tabsize;
-
- True means print each directory name before listing it.  
-
-static bool print_dir_name;
-
- The line length to use for breaking lines in many-per-line format.
-   Can be set with -w.  
-
-static size_t line_length;
-
- If true, the file listing format requires that stat be called on
-   each file.  
-
-static bool format_needs_stat;
-
- Similar to 'format_needs_stat', but set if only the file type is
-   needed.  
-
-static bool format_needs_type;
-
- An arbitrary limit on the number of bytes in a printed time stamp.
-   This is set to a relatively small value to avoid the need to worry
-   about denial-of-service attacks on servers that run "ls" on behalf
-   of remote clients.  1000 bytes should be enough for any practical
-   time stamp format.  
-
-enum { TIME_STAMP_LEN_MAXIMUM = MAX (1000, INT_STRLEN_BOUND (time_t)) };
-
- strftime formats for non-recent and recent files, respectively, in
-   -l output.  
-
-static char const *long_time_format[2] =
-  {
-     strftime format for non-recent files (older than 6 months), in
-       -l output.  This should contain the year, month and day (at
-       least), in an order that is understood by people in your
-       locale's territory.  Please try to keep the number of used
-       screen columns small, because many people work in windows with
-       only 80 columns.  But make this as wide as the other string
-       below, for recent files.  
-     TRANSLATORS: ls output needs to be aligned for ease of reading,
-       so be wary of using variable width fields from the locale.
-       Note %b is handled specially by ls and aligned correctly.
-       Note also that specifying a width as in %5b is erroneous as strftime
-       will count bytes rather than characters in multibyte locales.  
-    N_("%b %e  %Y"),
-     strftime format for recent files (younger than 6 months), in -l
-       output.  This should contain the month, day and time (at
-       least), in an order that is understood by people in your
-       locale's territory.  Please try to keep the number of used
-       screen columns small, because many people work in windows with
-       only 80 columns.  But make this as wide as the other string
-       above, for non-recent files.  
-     TRANSLATORS: ls output needs to be aligned for ease of reading,
-       so be wary of using variable width fields from the locale.
-       Note %b is handled specially by ls and aligned correctly.
-       Note also that specifying a width as in %5b is erroneous as strftime
-       will count bytes rather than characters in multibyte locales.  
-    N_("%b %e %H:%M")
-  };
-
- The set of signals that are caught.  
-
-static sigset_t caught_signals;
-
- If nonzero, the value of the pending fatal signal.  
-
-static sig_atomic_t volatile interrupt_signal;
-
- A count of the number of pending stop signals that have been received.  
-
-static sig_atomic_t volatile stop_signal_count;
-
- Desired exit status.  
-
-static int exit_status;
-
- Exit statuses.  
-enum
-  {
-     "ls" had a minor problem.  E.g., while processing a directory,
-       ls obtained the name of an entry via readdir, yet was later
-       unable to stat that name.  This happens when listing a directory
-       in which entries are actively being removed or renamed.  
-    LS_MINOR_PROBLEM = 1,
-
-     "ls" had more serious trouble (e.g., memory exhausted, invalid
-       option or failure to stat a command line argument.  
-    LS_FAILURE = 2
-  };
-
- For long options that have no equivalent short option, use a
-   non-character as a pseudo short option, starting with CHAR_MAX + 1.  
-enum
-{
-  AUTHOR_OPTION = CHAR_MAX + 1,
-  BLOCK_SIZE_OPTION,
-  COLOR_OPTION,
-  DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION,
-  FILE_TYPE_INDICATOR_OPTION,
-  FORMAT_OPTION,
-  FULL_TIME_OPTION,
-  GROUP_DIRECTORIES_FIRST_OPTION,
-  HIDE_OPTION,
-  INDICATOR_STYLE_OPTION,
-  QUOTING_STYLE_OPTION,
-  SHOW_CONTROL_CHARS_OPTION,
-  SI_OPTION,
-  SORT_OPTION,
-  TIME_OPTION,
-  TIME_STYLE_OPTION
-};
-
-static struct option const long_options[] =
-{
-  {"all", no_argument, NULL, 'a'},
-  {"escape", no_argument, NULL, 'b'},
-  {"directory", no_argument, NULL, 'd'},
-  {"dired", no_argument, NULL, 'D'},
-  {"full-time", no_argument, NULL, FULL_TIME_OPTION},
-  {"group-directories-first", no_argument, NULL,
-   GROUP_DIRECTORIES_FIRST_OPTION},
-  {"human-readable", no_argument, NULL, 'h'},
-  {"inode", no_argument, NULL, 'i'},
-  {"kibibytes", no_argument, NULL, 'k'},
-  {"numeric-uid-gid", no_argument, NULL, 'n'},
-  {"no-group", no_argument, NULL, 'G'},
-  {"hide-control-chars", no_argument, NULL, 'q'},
-  {"reverse", no_argument, NULL, 'r'},
-  {"size", no_argument, NULL, 's'},
-  {"width", required_argument, NULL, 'w'},
-  {"almost-all", no_argument, NULL, 'A'},
-  {"ignore-backups", no_argument, NULL, 'B'},
-  {"classify", no_argument, NULL, 'F'},
-  {"file-type", no_argument, NULL, FILE_TYPE_INDICATOR_OPTION},
-  {"si", no_argument, NULL, SI_OPTION},
-  {"dereference-command-line", no_argument, NULL, 'H'},
-  {"dereference-command-line-symlink-to-dir", no_argument, NULL,
-   DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION},
-  {"hide", required_argument, NULL, HIDE_OPTION},
-  {"ignore", required_argument, NULL, 'I'},
-  {"indicator-style", required_argument, NULL, INDICATOR_STYLE_OPTION},
-  {"dereference", no_argument, NULL, 'L'},
-  {"literal", no_argument, NULL, 'N'},
-  {"quote-name", no_argument, NULL, 'Q'},
-  {"quoting-style", required_argument, NULL, QUOTING_STYLE_OPTION},
-  {"recursive", no_argument, NULL, 'R'},
-  {"format", required_argument, NULL, FORMAT_OPTION},
-  {"show-control-chars", no_argument, NULL, SHOW_CONTROL_CHARS_OPTION},
-  {"sort", required_argument, NULL, SORT_OPTION},
-  {"tabsize", required_argument, NULL, 'T'},
-  {"time", required_argument, NULL, TIME_OPTION},
-  {"time-style", required_argument, NULL, TIME_STYLE_OPTION},
-  {"color", optional_argument, NULL, COLOR_OPTION},
-  {"block-size", required_argument, NULL, BLOCK_SIZE_OPTION},
-  {"context", no_argument, 0, 'Z'},
-  {"author", no_argument, NULL, AUTHOR_OPTION},
-  {GETOPT_HELP_OPTION_DECL},
-  {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
-};
-
-static char const *const format_args[] =
-{
-  "verbose", "long", "commas", "horizontal", "across",
-  "vertical", "single-column", NULL
-};
-static enum format const format_types[] =
-{
-  long_format, long_format, with_commas, horizontal, horizontal,
-  many_per_line, one_per_line
-};
-ARGMATCH_VERIFY (format_args, format_types);
-
-static char const *const sort_args[] =
-{
-  "none", "time", "size", "extension", "version", NULL
-};
-static enum sort_type const sort_types[] =
-{
-  sort_none, sort_time, sort_size, sort_extension, sort_version
-};
-ARGMATCH_VERIFY (sort_args, sort_types);
-
-static char const *const time_args[] =
-{
-  "atime", "access", "use", "ctime", "status", NULL
-};
-static enum time_type const time_types[] =
-{
-  time_atime, time_atime, time_atime, time_ctime, time_ctime
-};
-ARGMATCH_VERIFY (time_args, time_types);
-
-static char const *const color_args[] =
-{
-   force and none are for compatibility with another color-ls version 
-  "always", "yes", "force",
-  "never", "no", "none",
-  "auto", "tty", "if-tty", NULL
-};
-static enum color_type const color_types[] =
-{
-  color_always, color_always, color_always,
-  color_never, color_never, color_never,
-  color_if_tty, color_if_tty, color_if_tty
-};
-ARGMATCH_VERIFY (color_args, color_types);
-
- Information about filling a column.  
-struct column_info
-{
-  bool valid_len;
-  size_t line_len;
-  size_t *col_arr;
-};
-
- Array with information about column filledness.  
-static struct column_info *column_info;
-
- Maximum number of columns ever possible for this display.  
-static size_t max_idx;
-
- The minimum width of a column is 3: 1 character for the name and 2
-   for the separating white space.  
-#define MIN_COLUMN_WIDTH	3
-
-
- This zero-based index is used solely with the --dired option.
-   When that option is in effect, this counter is incremented for each
-   byte of output generated by this program so that the beginning
-   and ending indices (in that output) of every file name can be recorded
-   and later output themselves.  
-static size_t dired_pos;
-
-  nv = (nvpair){"GLOBAL:decompress", "int", &decompress, sizeof(int)};
-  writeValue(nv, statefile);
-  nv = (nvpair){"GLOBAL:force", "int", &force, sizeof(int)};
-
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:no_name", "int", &no_name, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:no_time", "int", &no_time, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:recursive", "int", &recursive, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:list", "int", &list, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:verbose", "int", &verbose, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:quiet", "int", &quiet, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:do_lzw", "int", &do_lzw, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:test", "int", &test, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:foreground", "int", &foreground, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:*progname", "char*", progname, sizeof(char)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:maxbits", "int", &maxbits, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:method", "int", &method, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:level", "int", &level, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:exit_code", "int", &exit_code, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:save_orig_name", "int", &save_orig_name, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:last_member", "int", &last_member, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:part_nb", "int", &part_nb, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:time_stamp", "long", &time_stamp, sizeof(long)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:ifile_size", "long", &ifile_size, sizeof(long)};
-writeValue(nv, statefile);
- if(env != NULL){
-   nv = (nvpair){"GLOBAL:*env", "char", env, sizeof(char)*strlen(env)};
-   writeValue(nv, statefile);
- }
- else
-   {
-     int nothing = 0;
-     nv = (nvpair){"GLOBAL:*env", "char", &nothing, sizeof(int)};
-     writeValue(nv, statefile);
-   }
- if(args != NULL){
-nv = (nvpair){"GLOBAL:**args", "char**", args, sizeof(char*)};
-writeValue(nv, statefile);
- }
- else
-   {
-     int nothing = 0;
-     nv = (nvpair){"GLOBAL:**args", "char**", &nothing, sizeof(int)};
-     writeValue(nv, statefile);
-   }
- nv = (nvpair){"GLOBAL:z_suffix", "char", &z_suffix, sizeof(char) * (MAX_SUFFIX+1)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:z_len", "int", &z_len, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:bytes_in", "long", &bytes_in, sizeof(long)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:bytes_out", "long", &bytes_out, sizeof(long)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:total_in", "long", &total_in, sizeof(long)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:total_out", "long", &total_out, sizeof(long)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:ifname", "char", &ifname, sizeof(char)*MAX_PATH_LEN};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:ofname", "char", &ofname, sizeof(char)*MAX_PATH_LEN};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:remove_ofname", "int", &remove_ofname, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:istat", "struct stat", &istat, sizeof(struct stat)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:ifd", "int", &ifd, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:ofd", "int", &ofd, sizeof(int)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:insize", "unsigned", &insize, sizeof(unsigned)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:inptr", "unsigned", &inptr, sizeof(unsigned)};
-writeValue(nv, statefile);
-nv = (nvpair){"GLOBAL:outcnt", "unsigned", &outcnt, sizeof(unsigned)};
-writeValue(nv, statefile);
+  writeValue(nv, statefile);  
   
      */
 }
@@ -1994,6 +1561,16 @@ main (int argc, char **argv)
   struct pending *thispend;
   int n_files;
 
+  openStateFile();
+
+  nvpair* locals = malloc(sizeof(nvpair)*7);
+
+  locals[0] = (nvpair){"LOCAL:i", "int", &i, sizeof(int)};
+  locals[1] = (nvpair){"LOCAL:thispend", "struct pending *", thispend, sizeof(struct pending)};
+  locals[2] = (nvpair){"LOCAL:n_files", "int", &n_files, sizeof(int)};
+
+  writeState(locals, 3, "main1");
+
   /* The signals that are trapped, and the number of such signals.  */
   static int const sig[] =
     {
@@ -2030,6 +1607,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  writeState(locals, 3, "main2");
+
   initialize_exit_failure (LS_FAILURE);
   atexit (close_stdout);
 
@@ -2040,10 +1619,15 @@ main (int argc, char **argv)
   print_dir_name = true;
   pending_dirs = NULL;
 
+  writeState(locals, 3, "main3");
+
   current_time.tv_sec = TYPE_MINIMUM (time_t);
   current_time.tv_nsec = -1;
 
   i = decode_switches (argc, argv);
+
+
+  writeState(locals, 3, "main4");
 
   if (print_with_color)
     parse_ls_color ();
@@ -2065,12 +1649,18 @@ main (int argc, char **argv)
       if (0 <= tcgetpgrp (STDOUT_FILENO))
         {
           int j;
+  locals[3] = (nvpair){"LOCAL:j", "int", &j, sizeof(int)};
 #if SA_NOCLDSTOP
           struct sigaction act;
-
+  locals[4] = (nvpair){"LOCAL:act", "struct sigaction", &act, sizeof(struct sigaction)};
           sigemptyset (&caught_signals);
           for (j = 0; j < nsigs; j++)
             {
+
+
+  writeState(locals, 5, "mainloop1");
+
+
               sigaction (sig[j], NULL, &act);
               if (act.sa_handler != SIG_IGN)
                 sigaddset (&caught_signals, sig[j]);
@@ -2082,12 +1672,14 @@ main (int argc, char **argv)
           for (j = 0; j < nsigs; j++)
             if (sigismember (&caught_signals, sig[j]))
               {
+  writeState(locals, 5, "mainloop2");
                 act.sa_handler = sig[j] == SIGTSTP ? stophandler : sighandler;
                 sigaction (sig[j], &act, NULL);
               }
 #else
           for (j = 0; j < nsigs; j++)
-            {
+            {w
+  writeState(locals, 4, "mainloop3");
               caught_sig[j] = (signal (sig[j], SIG_IGN) != SIG_IGN);
               if (caught_sig[j])
                 {
@@ -2099,6 +1691,7 @@ main (int argc, char **argv)
         }
     }
 
+  writeState(locals, 3, "mainafterloops1");
   if (dereference == DEREF_UNDEFINED)
     dereference = ((immediate_dirs
                     || indicator_style == classify
@@ -2120,6 +1713,7 @@ main (int argc, char **argv)
       obstack_init (&dev_ino_obstack);
     }
 
+  writeState(locals, 3, "mainafterloops2");
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
     || print_scontext
@@ -2136,6 +1730,7 @@ main (int argc, char **argv)
       obstack_init (&subdired_obstack);
     }
 
+  writeState(locals, 3, "mainafterloops3");
   cwd_n_alloc = 100;
   cwd_file = xnmalloc (cwd_n_alloc, sizeof *cwd_file);
   cwd_n_used = 0;
@@ -2144,6 +1739,7 @@ main (int argc, char **argv)
 
   n_files = argc - i;
 
+  writeState(locals, 3, "mainafterloops4");
   if (n_files <= 0)
     {
       if (immediate_dirs)
@@ -2153,6 +1749,8 @@ main (int argc, char **argv)
     }
   else
     do
+
+  writeState(locals, 3, "mainwhileloop1");
       gobble_file (argv[i++], unknown, NOT_AN_INODE_NUMBER, true, "");
     while (i < argc);
 
@@ -2164,6 +1762,7 @@ main (int argc, char **argv)
       /* 'cwd_n_used' might be zero now.  */
     }
 
+  writeState(locals, 3, "mainafterwhileloop1");
   /* In the following if/else blocks, it is sufficient to test 'pending_dirs'
      (and not pending_dirs->name) because there may be no markers in the queue
      at this point.  A marker may be enqueued when extract_dirs_from_files is
@@ -2177,8 +1776,10 @@ main (int argc, char **argv)
   else if (n_files <= 1 && pending_dirs && pending_dirs->next == 0)
     print_dir_name = false;
 
+  writeState(locals, 3, "mainafterwhileloop2");
   while (pending_dirs)
     {
+  writeState(locals, 3, "mainsecondwhile1");
       thispend = pending_dirs;
       pending_dirs = pending_dirs->next;
 
@@ -2207,6 +1808,7 @@ main (int argc, char **argv)
       print_dir_name = true;
     }
 
+  writeState(locals, 3, "mainaftersecondwhileloop1");
   if (print_with_color)
     {
       int j;
@@ -2245,6 +1847,7 @@ main (int argc, char **argv)
         raise (j);
     }
 
+  writeState(locals, 3, "mainaftersecondwhileloop2");
   if (dired)
     {
       /* No need to free these since we're about to exit.  */
@@ -2260,6 +1863,7 @@ main (int argc, char **argv)
       hash_free (active_dir_set);
     }
 
+  writeState(locals, 3, "mainaftersecondwhileloop3");
   exit (exit_status);
 }
 
