@@ -128,7 +128,7 @@ void writeValue(nvpair apair, FILE* fp)
 
 
 FILE* statefile;
-char* statefilename = "/home/brian/Desktop/gradschool/statefile.dat";
+char* statefilename = "/home/brian/Desktop/gradschool/catstatefile.dat";
 //char* outputfilename = "/home/brian/Desktop/gradschool/parsedstate.csv";
 void openStateFile(){
   statefile = fopen(statefilename, "w");
@@ -668,13 +668,29 @@ main (int argc, char **argv)
 
     openStateFile();
 
-    nvpair* locals = malloc(sizeof(nvpair)*3);
-    //STARTHERE.
-    //locals[0] = (nvpair){"LOCAL:file_count", "int", &file_count, sizeof(int)};
-    //locals[1] = (nvpair){"LOCAL:proglen", "int", &proglen, sizeof(int)};
-    //locals[2] = (nvpair){"LOCAL:optc", "int", &optc, sizeof(int)};
+    nvpair* locals = malloc(sizeof(nvpair)*20);
+    locals[0] = (nvpair){"LOCAL:outsize", "size_t", &outsize, sizeof(size_t)};
+    locals[1] = (nvpair){"LOCAL:insize", "size_t", &insize, sizeof(size_t)};
+    locals[2] = (nvpair){"LOCAL:page_size", "size_t", &page_size, sizeof(size_t)};
+    locals[3] = (nvpair){"LOCAL:inbuf", "char *", inbuf, sizeof(char)};
+    locals[4] = (nvpair){"LOCAL:outbuf", "char *", outbuf, sizeof(char)};
+    locals[5] = (nvpair){"LOCAL:ok", "bool", &ok, sizeof(bool)};
+    locals[6] = (nvpair){"LOCAL:c", "int", &c, sizeof(int)};
+    locals[7] = (nvpair){"LOCAL:argind", "int", &argind, sizeof(int)};
+    locals[8] = (nvpair){"LOCAL:out_dev", "dev_t", &out_dev, sizeof(dev_t)};
+    locals[9] = (nvpair){"LOCAL:out_ino", "ino_t", &out_ino, sizeof(ino_t)};
+    locals[10]= (nvpair){"LOCAL:check_redirection", "bool", &check_redirection, sizeof(bool)};
+    locals[11]= (nvpair){"LOCAL:have_read_stdin", "bool", &have_read_stdin, sizeof(bool)};
+    locals[12]= (nvpair){"LOCAL:stat_buf", "struct stat", &stat_buf, sizeof(struct stat)};
+    locals[13]= (nvpair){"LOCAL:number", "bool", &number, sizeof(bool)};
+    locals[14]= (nvpair){"LOCAL:number_nonblank", "bool", &number_nonblank, sizeof(bool)};
+    locals[15]= (nvpair){"LOCAL:squeeze_blank", "bool", &squeeze_blank, sizeof(bool)};
+    locals[16]= (nvpair){"LOCAL:show_ends", "bool", &show_ends, sizeof(bool)};
+    locals[17]= (nvpair){"LOCAL:show_nonprinting", "bool", &show_nonprinting, sizeof(bool)};
+    locals[18]= (nvpair){"LOCAL:show_tabs", "bool", &show_tabs, sizeof(bool)};
+    locals[19]= (nvpair){"LOCAL:file_open_mode", "int", &file_open_mode, sizeof(int)};
 
-
+    writeState(locals, 20, "main1");
 
   static struct option const long_options[] =
   {
@@ -696,6 +712,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+    writeState(locals, 20, "main2");
+
   /* Arrange to close stdout if we exit via the
      case_GETOPT_HELP_CHAR or case_GETOPT_VERSION_CHAR code.
      Normally STDOUT_FILENO is used rather than stdout, so
@@ -707,6 +725,8 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv, "benstuvAET", long_options, NULL))
          != -1)
     {
+
+    writeState(locals, 20, "main1loop1");
       switch (c)
         {
         case 'b':
@@ -765,6 +785,7 @@ main (int argc, char **argv)
 
   /* Get device, i-node number, and optimal blocksize of output.  */
 
+    writeState(locals, 20, "main3");
   if (fstat (STDOUT_FILENO, &stat_buf) < 0)
     error (EXIT_FAILURE, errno, _("standard output"));
 
@@ -789,6 +810,7 @@ main (int argc, char **argv)
 #endif
     }
 
+    writeState(locals, 20, "main4");
   if (! (number || show_ends || squeeze_blank))
     {
       file_open_mode |= O_BINARY;
@@ -803,8 +825,11 @@ main (int argc, char **argv)
   infile = "-";
   argind = optind;
 
+    writeState(locals, 20, "main5");
   do
     {
+
+    writeState(locals, 20, "main2loop1");
       if (argind < argc)
         infile = argv[argind];
 
@@ -826,6 +851,7 @@ main (int argc, char **argv)
             }
         }
 
+    writeState(locals, 20, "main2loop2");
       if (fstat (input_desc, &stat_buf) < 0)
         {
           error (0, errno, "%s", infile);
@@ -841,6 +867,8 @@ main (int argc, char **argv)
          stdout, and skip this input file if they coincide.  Input
          files cannot be redirected to themselves.  */
 
+
+    writeState(locals, 20, "main2loop3");
       if (check_redirection
           && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino
           && (input_desc != STDIN_FILENO))
@@ -898,6 +926,7 @@ main (int argc, char **argv)
           free (outbuf);
         }
 
+    writeState(locals, 20, "main2loop4");
       free (inbuf);
 
     contin:
@@ -909,6 +938,7 @@ main (int argc, char **argv)
     }
   while (++argind < argc);
 
+    writeState(locals, 20, "mainend");
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, _("closing standard input"));
 
