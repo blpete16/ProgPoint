@@ -1,0 +1,193 @@
+/*BLP - State Drop Methods Start */
+
+typedef struct nvpairtag {
+  char* name;
+  char* type;
+  void* data;
+  int databytecount;
+}nvpair;
+
+void queue(void* toqueue, int bytecount, FILE* fp)
+{
+  fwrite(toqueue, sizeof(unsigned char), bytecount, fp);
+}
+
+
+void writeValue(nvpair apair, FILE* fp)
+{
+  if(apair.data == NULL){return;}
+
+  int slen = strlen(apair.name);
+
+  void* v = &slen;
+
+  queue(v, sizeof(int), fp);
+
+  v = apair.name;
+
+  queue(v, sizeof(char) * slen, fp);
+
+  slen = strlen(apair.type);
+
+  v = &slen;
+
+  queue(v, sizeof(int), fp);
+
+  v = apair.type;
+
+  queue(v, sizeof(char) * slen, fp);
+
+  v = &apair.databytecount;
+
+  queue(v, sizeof(int), fp);
+
+  queue(apair.data, apair.databytecount, fp);
+}
+
+
+FILE* statefile;
+char* statefilename = "/home/brian/Desktop/gradschool/statefile.dat";
+//char* outputfilename = "/home/brian/Desktop/gradschool/parsedstate.csv";
+void openStateFile(){
+  statefile = fopen(statefilename, "w");
+}
+
+void finishState(){
+  fclose(statefile);
+}
+
+void writeState(nvpair* localpairs, int localpaircount, char* statename){
+  nvpair nv = {"GLOBAL:ascii", "int", &ascii, sizeof(int)};
+  
+  int paircount = 40 + localpaircount;
+
+  int namelen = strlen(statename);
+
+  fwrite(&namelen, sizeof(int), 1, statefile);
+
+  queue(statename, sizeof(char) * namelen, statefile);  
+  
+  
+  fwrite(&paircount, sizeof(int), 1, statefile);
+
+  int i = 0;
+  for(i = 0; i < localpaircount; i++){
+    writeValue(*(localpairs+i), statefile);
+  }
+
+  writeValue(nv, statefile);
+  
+  nv = (nvpair){"GLOBAL:to_stdout", "int", &to_stdout, sizeof(int)};
+  writeValue(nv, statefile);
+
+  nv = (nvpair){"GLOBAL:decompress", "int", &decompress, sizeof(int)};
+  writeValue(nv, statefile);
+  nv = (nvpair){"GLOBAL:force", "int", &force, sizeof(int)};
+
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:no_name", "int", &no_name, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:no_time", "int", &no_time, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:recursive", "int", &recursive, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:list", "int", &list, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:verbose", "int", &verbose, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:quiet", "int", &quiet, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:do_lzw", "int", &do_lzw, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:test", "int", &test, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:foreground", "int", &foreground, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:*progname", "char*", progname, sizeof(char)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:maxbits", "int", &maxbits, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:method", "int", &method, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:level", "int", &level, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:exit_code", "int", &exit_code, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:save_orig_name", "int", &save_orig_name, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:last_member", "int", &last_member, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:part_nb", "int", &part_nb, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:time_stamp", "long", &time_stamp, sizeof(long)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:ifile_size", "long", &ifile_size, sizeof(long)};
+writeValue(nv, statefile);
+ if(env != NULL){
+   nv = (nvpair){"GLOBAL:*env", "char", env, sizeof(char)*strlen(env)};
+   writeValue(nv, statefile);
+ }
+ else
+   {
+     int nothing = 0;
+     nv = (nvpair){"GLOBAL:*env", "char", &nothing, sizeof(int)};
+     writeValue(nv, statefile);
+   }
+ if(args != NULL){
+nv = (nvpair){"GLOBAL:**args", "char**", args, sizeof(char*)};
+writeValue(nv, statefile);
+ }
+ else
+   {
+     int nothing = 0;
+     nv = (nvpair){"GLOBAL:**args", "char**", &nothing, sizeof(int)};
+     writeValue(nv, statefile);
+   }
+ nv = (nvpair){"GLOBAL:z_suffix", "char", &z_suffix, sizeof(char) * (MAX_SUFFIX+1)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:z_len", "int", &z_len, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:bytes_in", "long", &bytes_in, sizeof(long)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:bytes_out", "long", &bytes_out, sizeof(long)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:total_in", "long", &total_in, sizeof(long)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:total_out", "long", &total_out, sizeof(long)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:ifname", "char", &ifname, sizeof(char)*MAX_PATH_LEN};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:ofname", "char", &ofname, sizeof(char)*MAX_PATH_LEN};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:remove_ofname", "int", &remove_ofname, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:istat", "struct stat", &istat, sizeof(struct stat)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:ifd", "int", &ifd, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:ofd", "int", &ofd, sizeof(int)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:insize", "unsigned", &insize, sizeof(unsigned)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:inptr", "unsigned", &inptr, sizeof(unsigned)};
+writeValue(nv, statefile);
+nv = (nvpair){"GLOBAL:outcnt", "unsigned", &outcnt, sizeof(unsigned)};
+writeValue(nv, statefile);
+
+
+}
+
+/*BLP - State Drop Methods End */
+
+/*BLP - top of main */
+
+    openStateFile();
+
+    nvpair* locals = malloc(sizeof(nvpair)*3);
+
+    locals[0] = (nvpair){"LOCAL:file_count", "int", &file_count, sizeof(int)};
+    locals[1] = (nvpair){"LOCAL:proglen", "int", &proglen, sizeof(int)};
+    locals[2] = (nvpair){"LOCAL:optc", "int", &optc, sizeof(int)};
+
+
+/*end top of main */
