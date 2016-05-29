@@ -1,0 +1,15 @@
+DROPSTATE:main1
+LOCAL:c,int,b'\x00\x00\x00\x00'
+DROPSTATE:main2
+LOCAL:c,int,b'\x00\x00\x00\x00'
+DROPSTATE:main3
+LOCAL:c,int,b'\x00\x00\x00\x00'
+DROPSTATE:main4
+LOCAL:c,int,b'\xff\xff\xff\xff'
+DROPSTATE:main5
+LOCAL:c,int,b'\xff\xff\xff\xff'
+LOCAL:fail,bool,b'\x00'
+DROPSTATE:main6
+LOCAL:c,int,b'\xff\xff\xff\xff'
+LOCAL:fail,bool,b'\x00'
+,,b''

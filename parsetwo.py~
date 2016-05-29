@@ -1,0 +1,18 @@
+def buildint(bvals):
+    return int.from_bytes(bvals, byteorder='little')
+
+
+infilename = sys.argv[1]
+outfilename = sys.argv[2]
+
+with open(infilename, 'rb') as infile:
+    with open(outfilename, 'w') as ofile:
+        bytes_read = infile.read(4)
+        while bytes_read:
+            ival = buildint(bytes_read)
+    
+            bytes_read = infile.read(ival)
+            ofile.write(bytes_read)
+            ofile.write(",")
+            bytes_read = infile.read(4)
+    
