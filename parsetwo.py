@@ -1,11 +1,15 @@
 import sys
 import os
 
+def convbytes(bstr):
+    return str(buildint(bstr))
+
 def buildint(bvals):
     return int.from_bytes(bvals, byteorder='little')
 
 def buildstr(bvals):
     print(str(bvals))
+    #return str(bvals)
     return bvals.decode("utf-8")
 
 def getOutFile(infilename, outfiledir):
@@ -73,5 +77,5 @@ for infilename in os.listdir(infiledir):
                         print("read size of data:"+str(lival))
                         bytes_read = infile.read(lival)
                         print("read data:"+str(bytes_read))
-                        ofile.write(str(bytes_read))
+                        ofile.write(convbytes(bytes_read))
                         ofile.write("\n")
