@@ -1,0 +1,79 @@
+import sys
+import os
+
+class DataGroup():
+    def __init__(self):
+        self.statesets = []
+
+    def hashcopy():
+        varsets = {}
+        ret = DataGroup()
+        for stateset in self.statesets:
+            nss = StateSet(stateset.name)
+            for state in statesets.states:
+                nss.states.append(State())
+                for varval in state.vartable:
+                    if not varval.name in varsets:
+                        varsets[varval.name] = []
+                    if not varval.value in varsets[varval.name]:
+                        varsets[varval.name].append(varval.value)
+            ret.statesets.append(nss)
+
+        for i in range(len(self.statesets)):
+            for j in range(len(self.statesets[i].states)):
+                varkey = self.statesets[i].states[j].
+                ret.statesets[i].states[j].vartable
+        
+
+class StateSet():
+    def __init__(self, inname):
+        self.name = inname
+        self.states = []
+
+class State():
+    def __init__(self):
+        self.vartable = {}
+
+class VarVal():
+    def __init__(self):
+        self.name = ""
+        self.typ = ""
+        self.value = ""
+    
+
+def getOutFile(infilename, outfiledir):
+    lastslashind = infilename.rfind("/")
+    ifname = infilename[lastslashind+1:]
+    ifname = outfiledir+"parsed_"+ifname
+    return ifname
+
+def convertBstrToDecStr(bstr):
+    istr = "".join(map(lambda b: format(
+    return bstr
+
+infiledir = sys.argv[1]
+outfiledir = sys.argv[2]
+filternamefile = sys.argv[3]
+filternames = []
+with open(filternamefile, 'r') as ffile:
+    for line in ffile:
+        filternames.append(line)
+
+for infilename in os.listdir(infiledir):
+    outfilename = getOutFile(infilename, outfiledir)
+    infilename = infiledir + infilename
+    with open(infilename, 'rb') as infile:
+        with open(outfilename, 'w') as ofile:
+            totalbstr = ""
+            for line in infile:
+                if(line.startswith("DROPSTATE")):
+                    if(len(totalbstr) > 0):
+                        intstr = convertBstrToDecStr(totalbstr)
+                        ofile.write(intstr)
+                        ofile.write("\n")
+                    totalbstr = ""
+                    ofile.write(line)
+                else:
+                    vals = line.split(",")
+                    if(not (vals[0] in filternames)):
+                        totalbstr = totalbstr + (vals[2])[2:-2]
