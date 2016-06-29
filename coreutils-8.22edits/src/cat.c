@@ -81,7 +81,7 @@ static int newlines2 = 0;
 
 
 /*BLP - State Drop Methods Start */
-
+int prgCount = 0;
 typedef struct nvpairtag {
   char* name;
   char* type;
@@ -156,6 +156,9 @@ void writeState(nvpair* localpairs, int localpaircount, char* statename){
   for(i = 0; i < localpaircount; i++){
     writeValue(*(localpairs+i), statefile);
   }
+
+  nv = (nvpair){"COUNTER:","int", &prgCount, sizeof(int)};
+  writeValue(nv, statefile);
 
   nv = (nvpair){"GLOBAL:input_desc", "int", &input_desc, sizeof(int)};
   writeValue(nv, statefile);
@@ -626,7 +629,7 @@ main (int argc, char **argv)
 
   /* Optimal size of i/o operations of input.  */
   size_t insize;
-
+  prgCount++;
   size_t page_size = getpagesize ();
 
   /* Pointer to the input buffer.  */
@@ -636,6 +639,8 @@ main (int argc, char **argv)
   char *outbuf;
 
   bool ok = true;
+
+  prgCount++;
   int c;
 
   /* Index in argv to processed argument.  */
@@ -650,19 +655,29 @@ main (int argc, char **argv)
   /* True if the output file should not be the same as any input file.  */
   bool check_redirection = true;
 
+  prgCount++;
   /* Nonzero if we have ever read standard input.  */
   bool have_read_stdin = false;
 
+  prgCount++;
   struct stat stat_buf;
 
   /* Variables that are set according to the specified options.  */
   bool number = false;
+
+  prgCount++;
   bool number_nonblank = false;
+  prgCount++;
   bool squeeze_blank = false;
+  prgCount++;
   bool show_ends = false;
+  prgCount++;
   bool show_nonprinting = false;
+  prgCount++;
   bool show_tabs = false;
+  prgCount++;
   int file_open_mode = O_RDONLY;
+  prgCount++;
 
 
 
@@ -705,6 +720,7 @@ main (int argc, char **argv)
     {GETOPT_VERSION_OPTION_DECL},
     {NULL, 0, NULL, 0}
   };
+  prgCount++;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -725,31 +741,40 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv, "benstuvAET", long_options, NULL))
          != -1)
     {
+  prgCount++;
 
     writeState(locals, 20, "main1loop1");
       switch (c)
         {
         case 'b':
           number = true;
+  prgCount++;
           number_nonblank = true;
+  prgCount++;
           break;
 
         case 'e':
           show_ends = true;
+  prgCount++;
           show_nonprinting = true;
+  prgCount++;
           break;
 
         case 'n':
           number = true;
+  prgCount++;
           break;
 
         case 's':
           squeeze_blank = true;
+  prgCount++;
           break;
 
         case 't':
           show_tabs = true;
+  prgCount++;
           show_nonprinting = true;
+  prgCount++;
           break;
 
         case 'u':
@@ -758,20 +783,26 @@ main (int argc, char **argv)
 
         case 'v':
           show_nonprinting = true;
+  prgCount++;
           break;
 
         case 'A':
           show_nonprinting = true;
+  prgCount++;
           show_ends = true;
+  prgCount++;
           show_tabs = true;
+  prgCount++;
           break;
 
         case 'E':
           show_ends = true;
+  prgCount++;
           break;
 
         case 'T':
           show_tabs = true;
+  prgCount++;
           break;
 
         case_GETOPT_HELP_CHAR;
@@ -790,6 +821,7 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, _("standard output"));
 
   outsize = io_blksize (stat_buf);
+  prgCount++;
   /* Input file can be output file for non-regular files.
      fstat on pipes returns S_IFSOCK on some systems, S_IFIFO
      on others, so the checking should not be done for those types,
@@ -799,14 +831,19 @@ main (int argc, char **argv)
   if (S_ISREG (stat_buf.st_mode))
     {
       out_dev = stat_buf.st_dev;
+  prgCount++;
       out_ino = stat_buf.st_ino;
+  prgCount++;
     }
   else
     {
       check_redirection = false;
+  prgCount++;
 #ifdef lint  /* Suppress 'used before initialized' warning.  */
       out_dev = 0;
+  prgCount++;
       out_ino = 0;
+  prgCount++;
 #endif
     }
 
@@ -814,6 +851,7 @@ main (int argc, char **argv)
   if (! (number || show_ends || squeeze_blank))
     {
       file_open_mode |= O_BINARY;
+  prgCount++;
       if (O_BINARY && ! isatty (STDOUT_FILENO))
         xfreopen (NULL, "wb", stdout);
     }
@@ -823,7 +861,9 @@ main (int argc, char **argv)
   /* Main loop.  */
 
   infile = "-";
+  prgCount++;
   argind = optind;
+  prgCount++;
 
     writeState(locals, 20, "main5");
   do
@@ -832,21 +872,26 @@ main (int argc, char **argv)
     writeState(locals, 20, "main2loop1");
       if (argind < argc)
         infile = argv[argind];
+  prgCount++;
 
       if (STREQ (infile, "-"))
         {
           have_read_stdin = true;
+  prgCount++;
           input_desc = STDIN_FILENO;
+  prgCount++;
           if ((file_open_mode & O_BINARY) && ! isatty (STDIN_FILENO))
             xfreopen (NULL, "rb", stdin);
         }
       else
         {
           input_desc = open (infile, file_open_mode);
+  prgCount++;
           if (input_desc < 0)
             {
               error (0, errno, "%s", infile);
               ok = false;
+  prgCount++;
               continue;
             }
         }
@@ -856,10 +901,12 @@ main (int argc, char **argv)
         {
           error (0, errno, "%s", infile);
           ok = false;
+  prgCount++;
           goto contin;
         }
       insize = io_blksize (stat_buf);
 
+  prgCount++;
       fdadvise (input_desc, 0, 0, FADVISE_SEQUENTIAL);
 
       /* Compare the device and i-node numbers of this input file with
@@ -875,6 +922,7 @@ main (int argc, char **argv)
         {
           error (0, 0, _("%s: input file is output file"), infile);
           ok = false;
+  prgCount++;
           goto contin;
         }
 
@@ -885,13 +933,17 @@ main (int argc, char **argv)
              || show_tabs || squeeze_blank))
         {
           insize = MAX (insize, outsize);
+  prgCount++;
           inbuf = xmalloc (insize + page_size - 1);
+  prgCount++;
 
           ok &= simple_cat (ptr_align (inbuf, page_size), insize);
+  prgCount++;
         }
       else
         {
           inbuf = xmalloc (insize + 1 + page_size - 1);
+  prgCount++;
 
           /* Why are
              (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN + PAGE_SIZE - 1)
@@ -917,11 +969,13 @@ main (int argc, char **argv)
 
           outbuf = xmalloc (outsize - 1 + insize * 4 + LINE_COUNTER_BUF_LEN
                             + page_size - 1);
+  prgCount++;
 
           ok &= cat (ptr_align (inbuf, page_size), insize,
                      ptr_align (outbuf, page_size), outsize, show_nonprinting,
                      show_tabs, number, number_nonblank, show_ends,
                      squeeze_blank);
+  prgCount++;
 
           free (outbuf);
         }
@@ -934,6 +988,7 @@ main (int argc, char **argv)
         {
           error (0, errno, "%s", infile);
           ok = false;
+  prgCount++;
         }
     }
   while (++argind < argc);
